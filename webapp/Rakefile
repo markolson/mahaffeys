@@ -1,0 +1,25 @@
+require './app'
+require 'sinatra/activerecord/rake'
+require 'nokogiri'
+require 'open-uri'
+require 'pry'
+require_relative "./models/user.rb"
+
+namespace :scrape do
+  task :users do
+    page = Nokogiri::HTML(open("http://www.mahaffeyspub.com/beer/member_list.php#numeric"))
+    last_scraped = Time.now
+    body_text = page.css('body')[0].text
+    list_start = body_text.index("1--Shannon Leonard")
+    body_text = body_text[list_start-1..body_text.length-1]
+    user_list = body_text.split("\r\n")
+    user_list.pop
+    user_list.map! { |user| user[1..user.length-1] }
+    user_list.map! { |user| user.split("--") }
+    user_list.each do |user|
+      u = User.new(name: user[1], last_scraped: last_scraped, beer_count: 0)
+      u.id = user[0].to_i
+      u.save
+    end
+  end
+end
