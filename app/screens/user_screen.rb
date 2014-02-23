@@ -1,15 +1,25 @@
 class UserScreen < ProMotion::TableScreen
 
   title "Mark Olson"
+  tab_bar_item title: "You", icon: "111-user.png"
   searchable
 
 	def on_load
-    set_nav_bar_button :left, title: "Find", action: nil, system_icon: :search
+    set_nav_bar_button :left, title: "Find", action: 'open_user_search', system_icon: :search
     set_nav_bar_button :right, title: "Compare", action: nil
-    
-    set_tab_bar_item({ title: "You", icon: "user.png" })
   end
 
+  def open_user_search
+    @finder = UserSearch.new
+    @finder.callback = self
+    @finder.title = "Change User"
+    open_screen @finder, modal: true
+  end
+
+  def set_user(user)
+    self.title = user[1]
+    p "Title is now #{title}"
+  end
 
 
   def table_data
@@ -48,7 +58,7 @@ class UserScreen < ProMotion::TableScreen
         { 
           title: beer,
           cell_style: UITableViewCellStyleSubtitle,
-          image: { image: (rand(2) % 2 == 0 ? UIImage.imageNamed("drank") : UIImage.imageNamed("undrank") ), radius: 20 },
+          image: { image: (rand(4) % 4 == 0 ? UIImage.imageNamed("drank") : UIImage.imageNamed("undrank") ), radius: 20 },
         }
       }
     }]
