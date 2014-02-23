@@ -1,0 +1,10 @@
+PODS:
+  - PKRevealController (2.0.1)
+
+DEPENDENCIES:
+  - PKRevealController (= 2.0.1)
+
+SPEC CHECKSUMS:
+  PKRevealController: 58c2ee995809d60afe30d68a2fd4669cc3ebfa96
+
+COCOAPODS: 0.29.0
