@@ -22,4 +22,12 @@ namespace :scrape do
       u.save
     end
   end
+
+  task :beers do
+    users = User.all
+    users.first(3).each do |user|
+      page = Nokogiri::HTML(open("http://www.mahaffeyspub.com/beer/beers_consumed.php?member_id_num=#{user.id}"))
+      puts page.css('h1')[1].text
+    end
+  end
 end
