@@ -3,7 +3,6 @@ require 'sinatra/activerecord'
 require './config/environments' #database configuration
 require './models/user'        #Model class
 require 'pry'
-require 'json'
 
 get '/' do
 	erb :index

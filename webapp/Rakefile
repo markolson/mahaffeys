@@ -4,6 +4,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'pry'
 require_relative "./models/user.rb"
+require_relative "./models/beer.rb"
 
 namespace :scrape do
   task :users do
@@ -27,7 +28,15 @@ namespace :scrape do
     users = User.all
     users.first(3).each do |user|
       page = Nokogiri::HTML(open("http://www.mahaffeyspub.com/beer/beers_consumed.php?member_id_num=#{user.id}"))
-      puts page.css('h1')[1].text
+      body_text = page.css('body').text
+      list_start = body_text.split("\r\n")
+      list_start.each do |i|
+        match = i.match(/\(([BCD])\)\s(.+)/)
+        if match
+          beer = Beer.new(name: match[2], container_type: match[1])
+          beer.save
+        end
+      end
     end
   end
 end
