@@ -2,7 +2,7 @@ class UserSearch < ProMotion::TableScreen
   searchable
 
   def on_load
-    
+    self.tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0) if (UIDevice.currentDevice.systemVersion.floatValue >= 7.0)
   end
 
   attr_accessor :callback 

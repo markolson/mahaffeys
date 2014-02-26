@@ -4,9 +4,18 @@ class UserScreen < ProMotion::TableScreen
   tab_bar_item title: "You", icon: "111-user.png"
   searchable
 
+  def tableView(table_view, viewForFooterInSection: index)
+    UIView.new
+  end
+
+  Notifier = Motion::Blitz
+
 	def on_load
     set_nav_bar_button :left, title: "Find", action: 'open_user_search', system_icon: :search
     set_nav_bar_button :right, title: "Compare", action: nil
+
+    tableView.tableFooterView = UIView.new.initWithFrame(CGRectZero)
+    fetch_data
   end
 
   def open_user_search
@@ -19,11 +28,16 @@ class UserScreen < ProMotion::TableScreen
   def set_user(user)
     self.title = user[1]
     p "Title is now #{title}"
+    @data = {}
+    update_table_data
+    fetch_data
   end
 
 
-  def table_data
-
+  def fetch_data(user_id=3162)
+    EM.add_timer 0.1 do
+      Motion::Blitz.loading
+    end
     drafts =   ["Brooklyn Hammarby Syndrome",
   "Courage Russian Imperial Stout",
   "Dogfish Head Birra Etrusca Bronze",
@@ -44,24 +58,33 @@ class UserScreen < ProMotion::TableScreen
   "Uinta Hop Nosh",
   "Unibroue La Terrible"]
 
-    [{
-      title: "Bottles & Cans",
-      cells: []
-      },
+    @data = {
+      "Bottles & Cans" => [],
+      "Casks" => [],
+      "Drafts" => drafts
+    }
+    EM.add_timer 5.0 do
+      update_table_data
+      Notifier.success
+    end
+  end
+
+
+  def table_data
+    @data ||= {}
+
+    @data.map {|name, types| 
       {
-      title: "Casks",
-      cells: []
-      },
-      {
-      title: "Drafts",
-      cells: drafts.map { |beer|
-        { 
-          title: beer,
-          cell_style: UITableViewCellStyleSubtitle,
-          image: { image: (rand(4) % 4 == 0 ? UIImage.imageNamed("drank") : UIImage.imageNamed("undrank") ), radius: 20 },
+        title: name,
+        cells: types.map { |t|
+          { 
+            title: t,
+            cell_style: UITableViewCellStyleSubtitle,
+            image: { image: (rand(4) % 4 == 0 ? UIImage.imageNamed("drank") : UIImage.imageNamed("undrank") ), radius: 20 },
+          }
         }
       }
-    }]
+    }
   end
 
   def swap_content_controller(screen_class)

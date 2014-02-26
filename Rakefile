@@ -4,6 +4,9 @@ require 'motion/project/template/ios'
 
 begin
   require 'bundler'
+  require 'motion-cocoapods'
+  require 'bubble-wrap/all'
+  require 'motion-blitz'
   Bundler.require
 rescue LoadError
 end
@@ -13,11 +16,14 @@ Motion::Project::App.setup do |app|
   app.name = 'Mahaffeys'
   app.pods do
   	pod 'PKRevealController', '=2.0.1'
+    pod 'SVProgressHUD'
   end
 
   require 'motion/project/template/ios'
   require 'bubble-wrap/all'
   require 'motion-testflight'
+  require 'motion-blitz'
+  
 
   app.testflight.sdk = 'vendor/TestFlight'
 	app.testflight.api_token = 'd0188ac2d0ae9d8384abfe645d598872_MjIwMTA'
