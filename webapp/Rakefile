@@ -24,9 +24,10 @@ namespace :scrape do
     end
   end
 
-  task :beers do
+  task :drank_beers do
     users = User.all
-    users.first(3).each do |user|
+    users[1..1].each do |user|
+      sleep(1)
       page = Nokogiri::HTML(open("http://www.mahaffeyspub.com/beer/beers_consumed.php?member_id_num=#{user.id}"))
       body_text = page.css('body').text
       list_start = body_text.split("\r\n")
@@ -39,4 +40,18 @@ namespace :scrape do
       end
     end
   end
+
+  task :current_beers do
+    page = Nokogiri::HTML(open("http://www.mahaffeyspub.com/beer/beers_in_stock.php"))
+    body_text = page.css('body').text
+    list_start = body_text.split("\r\n")
+    list_start.each do |i|
+      match = i.match(/\(([BCD])\)\s(.+)/)
+      if match
+        beer = Beer.new(name: match[2], container_type: match[1])
+        beer.save
+      end
+    end
+  end
+
 end
