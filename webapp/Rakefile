@@ -5,6 +5,7 @@ require 'open-uri'
 require 'pry'
 require_relative "./models/user.rb"
 require_relative "./models/beer.rb"
+require_relative "./models/brewery.rb"
 
 namespace :scrape do
   task :users do
@@ -25,18 +26,24 @@ namespace :scrape do
   end
 
   task :drank_beers do
-    users = User.all
-    users[1..1].each do |user|
-      sleep(1)
+    brewery_id = Brewery.first.id
+    users = User.where('id between 3100 and 4000')
+    users.each do |user|
       page = Nokogiri::HTML(open("http://www.mahaffeyspub.com/beer/beers_consumed.php?member_id_num=#{user.id}"))
       body_text = page.css('body').text
       list_start = body_text.split("\r\n")
       list_start.each do |i|
         match = i.match(/\(([BCD])\)\s(.+)/)
-        if match
-          beer = Beer.new(name: match[2], container_type: match[1])
-          beer.save
+        next if not match
+        beer_id = Beer.where(:name => match[2]).where(:type => match[1]).first
+        if not beer_id
+          beer_id = Beer.create_in_brewery(brewery_id, {"id" => Beer.next_id, "name" => match[2], "type" => match[1] })
         end
+        if not user.drank?(beer_id)
+          user.add_beer(beer_id)
+        end
+        
+
       end
     end
   end

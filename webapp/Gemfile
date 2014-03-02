@@ -7,3 +7,4 @@ gem "pg"
 gem "nokogiri"
 gem "json"
 gem "pry"
+gem 'sqlite3'

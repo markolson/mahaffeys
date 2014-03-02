@@ -15,22 +15,30 @@ ActiveRecord::Schema.define(version: 20140223212132) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "beers", force: true do |t|
-    t.string  "name"
-    t.string  "container_type"
-    t.integer "brewery_id"
-    t.integer "style_id"
-    t.string  "image_url"
-    t.decimal "abv"
+  create_table "beer", id: false, force: true do |t|
+    t.float   "abv"
+    t.string  "name", limit: nil
+    t.string  "type", limit: nil
+    t.integer "id"
   end
 
-  add_index "beers", ["name", "container_type"], name: "index_beers_on_name_and_container_type", unique: true, using: :btree
+  create_table "beer_lists", id: false, force: true do |t|
+    t.date    "at"
+    t.integer "beers", array: true
+  end
+
+  create_table "breweries", id: false, force: true do |t|
+    t.string  "name",  limit: nil
+    t.integer "id",                default: "nextval('breweries_id_seq'::regclass)", null: false
+    t.json    "beers",                                                                            array: true
+  end
 
   create_table "users", id: false, force: true do |t|
     t.integer  "id",           null: false
     t.string   "name"
     t.integer  "beer_count"
     t.datetime "last_scraped"
+    t.json     "beers",                     array: true
   end
 
 end
