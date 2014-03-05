@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140223212132) do
+ActiveRecord::Schema.define(version: 20140305013410) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,15 +22,9 @@ ActiveRecord::Schema.define(version: 20140223212132) do
     t.integer "id"
   end
 
-  create_table "beer_lists", id: false, force: true do |t|
-    t.date    "at"
-    t.integer "beers", array: true
-  end
-
-  create_table "breweries", id: false, force: true do |t|
-    t.string  "name",  limit: nil
-    t.integer "id",                default: "nextval('breweries_id_seq'::regclass)", null: false
-    t.json    "beers",                                                                            array: true
+  create_table "breweries", force: true do |t|
+    t.string "name"
+    t.json   "beers", array: true
   end
 
   create_table "users", id: false, force: true do |t|

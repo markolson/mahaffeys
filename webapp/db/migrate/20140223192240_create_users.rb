@@ -5,6 +5,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :name
       t.integer :beer_count
       t.timestamp :last_scraped
+      t.json :beers, array: true
     end
 
     execute "ALTER TABLE users ADD PRIMARY KEY (id);"
