@@ -1,6 +1,6 @@
 development:
   adapter: postgresql
   database: mahaffeys
-  username: 
+  username: mahaffeys_user
   password:
   host: localhost
