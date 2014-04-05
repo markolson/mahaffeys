@@ -13,4 +13,8 @@ class Beer < ActiveRecord::Base
   def self.next_id
   	(Beer.maximum('id') || 0) + 1
   end
+
+  def as_json(record)
+    {name: name, id: id}
+  end
 end

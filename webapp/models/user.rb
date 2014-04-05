@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
     sql = ActiveRecord::Base.send(:sanitize_sql_array, b)
     @beers ||= Beer.find_by_sql(sql).map{|x| x['beer_id'] }
   end
-
+  
   def add_beer(beer)
     blob = {"at" => Date.today.to_s, "beer_id" => beer.id}.to_json
     b = ["UPDATE users SET beers = beers || ?::json WHERE id=?"] + [blob, id]
