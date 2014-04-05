@@ -1,0 +1,14 @@
+source 'https://rubygems.org'
+
+gem 'heroku'
+
+gem 'rake'
+gem "bubble-wrap", "~> 1.4.0"
+gem 'motion-fontawesome'
+gem 'motion-cocoapods'
+gem 'motion-blitz'
+gem 'brewery_db'
+gem 'motion-testflight'
+
+gem "ProMotion", "~> 1.1.0" 
+gem "afmotion", "~> 2.0.0"
