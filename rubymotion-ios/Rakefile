@@ -14,6 +14,7 @@ end
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'Mahaffeys'
+  app.info_plist['UIStatusBarHidden'] = true
   app.provisioning_profile = '/Users/mark/Library/MobileDevice/Provisioning Profiles/198A03DA-8C91-440B-965D-81A4CE0462B2.mobileprovision'
   app.pods do
     pod 'SVProgressHUD'
