@@ -14,8 +14,15 @@ class UserScreen < ProMotion::TableScreen
     set_nav_bar_button :left, title: "Find", action: 'open_user_search', system_icon: :search
     set_nav_bar_button :right, title: "Compare", action: nil
 
-    tableView.tableFooterView = UIView.new.initWithFrame(CGRectZero)
-    #set_user([3162])
+    tableView.tableFooterView = UIView.new.initWithFrame(CGRectZero)    
+  end
+
+  def view_did_appear(animated) 
+    if App::Persistence['user']
+      set_user([App::Persistence['user']])
+    else
+      open_user_search
+    end
   end
 
   def open_user_search
@@ -39,7 +46,6 @@ class UserScreen < ProMotion::TableScreen
 
 
   def set_user(user)
-
     @active_user = User[user[0].to_i]
     self.title = @active_user.name
     @data = {}

@@ -32,18 +32,19 @@ class Beer
 		data.each {|beer|
 			@@all[beer['id'].to_i] = Beer.new(beer['id'].to_i, beer['name'], mapping[beer['type']], beer['active'])
 		}
+		App::Persistence['beers'] = data
 	end
 
 	def self.fetch_all(&callback)
 		Motion::Blitz.show('Grabbing Beers', :gradient)
 
-		AFMotion::JSON.get("http://10.99.99.158:9292/beers/all") do |result|
+		AFMotion::JSON.get("http://10.0.1.22:9292/beers/all") do |result|
       if result.success?
 				Motion::Blitz.dismiss
         callback.call result.object
       else
       	Motion::Blitz.error
-        callback.call nil
+        callback.call App::Persistence['beers']
       end
     end
 	end

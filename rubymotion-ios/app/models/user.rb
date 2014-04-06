@@ -35,18 +35,20 @@ class User
 		data.each {|user|
 			@@all[user['id'].to_i] = User.new(user['id'].to_i, user['name'], user['beers'])
 		}
+		App::Persistence['users'] = data
+		@@all
 	end
 
 	def self.fetch_all(&callback)
 		Motion::Blitz.show('Grabbing Users', :gradient)
 
-		AFMotion::JSON.get("http://10.99.99.158:9292/users/all") do |result|
+		AFMotion::JSON.get("http://10.0.1.22:9292/users/all") do |result|
       if result.success?
 				Motion::Blitz.dismiss
         callback.call result.object
       else
       	Motion::Blitz.error
-        callback.call nil
+        callback.call App::Persistence['users']
       end
     end
 	end

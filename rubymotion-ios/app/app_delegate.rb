@@ -9,6 +9,7 @@ class AppDelegate < PM::Delegate
 
     @user_observer = App.notification_center.observe 'ChangedUser' do |notification|
       @active_user =  notification.userInfo[:user]
+      App::Persistence['user'] = @active_user.id
     end    
   end
 
@@ -17,6 +18,6 @@ class AppDelegate < PM::Delegate
   	@user = UserScreen.new(nav_bar: true)
   	@events = HomeScreen.new(nav_bar: true)
   	open_tab_bar @ontap, @user, @events
-  	open_tab 1
+  	open_tab App::Persistence['user'].nil? ? 0 : 1
   end
 end
