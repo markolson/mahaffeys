@@ -8,15 +8,16 @@ class UserSearch < ProMotion::TableScreen
   attr_accessor :callback 
 
   def table_data
+
     [{
       title: nil,
-      cells: User.all.map do |user|
+      cells: User.all.sort {|a,b| a[1].id <=> b[1].id}.map do |user|
       {
-        title: user.name,
-        subtitle: "##{user.id}",
-        search_text: "#{user.id}",
+        title: user[1].name,
+        subtitle: "##{user[1].id}",
+        search_text: "#{user[1].id}",
         action: :on_click,
-        arguments: [user.id,  user.name]
+        arguments: [user[1].id,  user[1].name]
       }
       end
     }]
