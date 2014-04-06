@@ -6,6 +6,7 @@ require 'pry'
 require_relative "./models/user.rb"
 require_relative "./models/beer.rb"
 require_relative "./models/brewery.rb"
+require_relative "./models/ontap.rb"
 
 namespace :scrape do
   task :users do
@@ -52,6 +53,7 @@ namespace :scrape do
   task :current_beers do
     active = []
     @beers = {}
+    OntapBeer.delete_all
     brewery_id = Brewery.first.id
     page = Nokogiri::HTML(open("http://www.mahaffeyspub.com/beer/beers_in_stock.php"))
     body_text = page.css('body').text
@@ -65,6 +67,7 @@ namespace :scrape do
         beer_id = Beer.create_in_brewery(brewery_id, {"id" => Beer.next_id, "name" => match[2].strip, "type" => match[1].strip })
       end
       active << beer_id
+      OntapBeer.create(beer_id: beer_id.id)
     end
     p active
   end

@@ -14,7 +14,11 @@ class Beer < ActiveRecord::Base
   	(Beer.maximum('id') || 0) + 1
   end
 
+  def on_tap?
+    ::OntapBeer.exists?(beer_id: id)
+  end
+
   def as_json(record)
-    {name: name, id: id, type: type}
+    {name: name, id: id, type: type, active: on_tap? }
   end
 end

@@ -4,7 +4,7 @@ require 'sinatra/namespace'
 require './config/environments' #database configuration
 require './models/user'        #Model class
 require './models/beer'
-require './models/clubstatus'
+require './models/ontap'
 require 'pry'
 
 get '/' do
