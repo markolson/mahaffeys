@@ -1,9 +1,15 @@
 class AppDelegate < PM::Delegate
+
+  attr_accessor :active_user
   def on_load(app, options)
   	open LoadingScreen
   	@reload_observer = App.notification_center.observe 'FetchComplete' do |notification|
     	ready
   	end
+
+    @user_observer = App.notification_center.observe 'ChangedUser' do |notification|
+      @active_user =  notification.userInfo[:user]
+    end    
   end
 
   def ready

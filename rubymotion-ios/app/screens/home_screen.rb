@@ -9,6 +9,6 @@ class HomeScreen < PM::Screen
   end
 
   def on_load
-
+  	p Beer.ontap
   end
 end

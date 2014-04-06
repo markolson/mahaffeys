@@ -1,10 +1,11 @@
 class Beer
-	attr_accessor :id, :name, :type
+	attr_accessor :id, :name, :type, :active
 	
-	def initialize(id, name, type)
+	def initialize(id, name, type, active)
 		@id = id
 		@name = name
 		@type = type
+		@active = active
 	end
 
 	def self.[](id)
@@ -15,7 +16,13 @@ class Beer
 		@@all.select{|x| !x.nil? }
 	end
 
-	@@all = []
+	def self.ontap
+		@@all.values.select{|x| !x.nil? }.select {|x| x.active }.group_by{|x| 
+				x.type 
+			}
+	end
+
+	@@all = {}
 	def self.set(data)
 		mapping = {
 			'B' => 'Bottles & Cans',
@@ -23,16 +30,16 @@ class Beer
 			'D' => 'Drafts'
 		}
 		data.each {|beer|
-			@@all[beer['id']] = Beer.new(beer['id'].to_i, beer['name'], mapping[beer['type']])
+			@@all[beer['id'].to_i] = Beer.new(beer['id'].to_i, beer['name'], mapping[beer['type']], beer['active'])
 		}
 	end
 
 	def self.fetch_all(&callback)
-		Motion::Blitz.show('Grabbing Beers')
+		Motion::Blitz.show('Grabbing Beers', :gradient)
 
-		AFMotion::JSON.get("http://192.168.0.132:9292/beers/all") do |result|
+		AFMotion::JSON.get("http://10.99.99.158:9292/beers/all") do |result|
       if result.success?
-				Motion::Blitz.success
+				Motion::Blitz.dismiss
         callback.call result.object
       else
       	Motion::Blitz.error

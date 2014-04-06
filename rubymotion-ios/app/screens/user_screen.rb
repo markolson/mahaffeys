@@ -1,6 +1,6 @@
 class UserScreen < ProMotion::TableScreen
 
-  title "Mark Olson"
+  title "You, Eventually."
   tab_bar_item title: "You", icon: "111-user.png"
 
   def tableView(table_view, viewForFooterInSection: index)
@@ -15,7 +15,7 @@ class UserScreen < ProMotion::TableScreen
     set_nav_bar_button :right, title: "Compare", action: nil
 
     tableView.tableFooterView = UIView.new.initWithFrame(CGRectZero)
-    set_user([3162])
+    #set_user([3162])
   end
 
   def open_user_search
@@ -39,6 +39,7 @@ class UserScreen < ProMotion::TableScreen
 
 
   def set_user(user)
+
     @active_user = User[user[0].to_i]
     self.title = @active_user.name
     @data = {}
@@ -46,11 +47,11 @@ class UserScreen < ProMotion::TableScreen
     return unless @active_user
     @data =  @active_user.beers
     update_table_data
+    App.notification_center.post 'ChangedUser', nil, {user: @active_user }
   end
 
   def table_data
     @data ||= {}
-
     @data.map {|name, types| 
       {
         title: "#{name} (#{types.count})",
@@ -58,7 +59,7 @@ class UserScreen < ProMotion::TableScreen
           { 
             title: t.name,
             cell_style: UITableViewCellStyleSubtitle,
-            image: { image: UIImage.imageNamed("drank") , radius: 20 },
+            image: { image: @active_user.drank?(t.id.to_i) ? UIImage.imageNamed("drank") :UIImage.imageNamed("undrank") , radius: 20 },
           }
         }
       }

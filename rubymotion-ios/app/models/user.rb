@@ -22,6 +22,10 @@ class User
 			}
 	end
 
+	def drank?(id)
+		beer_ids.include?(id)
+	end
+
 	def self.all
 		@@all
 	end
@@ -34,11 +38,11 @@ class User
 	end
 
 	def self.fetch_all(&callback)
-		Motion::Blitz.show('Grabbing Users')
+		Motion::Blitz.show('Grabbing Users', :gradient)
 
-		AFMotion::JSON.get("http://192.168.0.132:9292/users/all") do |result|
+		AFMotion::JSON.get("http://10.99.99.158:9292/users/all") do |result|
       if result.success?
-				Motion::Blitz.success
+				Motion::Blitz.dismiss
         callback.call result.object
       else
       	Motion::Blitz.error
