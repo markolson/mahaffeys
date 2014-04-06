@@ -4,10 +4,8 @@ class User < ActiveRecord::Base
 
   validates :id, uniqueness: true
 
-  def beers
-    b = ["SELECT beer_id FROM users_beers WHERE id = ?"] + [self.id]
-    sql = ActiveRecord::Base.send(:sanitize_sql_array, b)
-    @beers ||= Beer.find_by_sql(sql).map{|x| x['beer_id'] }
+  def beer_ids
+    (beers || {}).map{|b| b['beer_id'] }
   end
   
   def add_beer(beer)
@@ -19,5 +17,9 @@ class User < ActiveRecord::Base
 
   def drank?(beer)
     return beers.include?(beer.id)
+  end
+
+  def as_json(record)
+    {name: name, id: id, beers: beer_ids }
   end
 end

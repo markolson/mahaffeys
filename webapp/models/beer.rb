@@ -15,6 +15,6 @@ class Beer < ActiveRecord::Base
   end
 
   def as_json(record)
-    {name: name, id: id}
+    {name: name, id: id, type: type}
   end
 end
