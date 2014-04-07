@@ -15,11 +15,7 @@ class User
 	end
 
 	def beers
-		@beers ||= @beer_ids.map {|b| 
-				Beer[b] 
-			}.group_by{|x| 
-				x.type 
-			}
+		@beers ||= @beer_ids.group_by{ |x| Beer[x].type }
 	end
 
 	def drank?(id)
@@ -42,7 +38,7 @@ class User
 	def self.fetch_all(&callback)
 		Motion::Blitz.show('Grabbing Users', :gradient)
 
-		AFMotion::JSON.get("http://10.0.1.22:9292/users/all") do |result|
+		AFMotion::JSON.get("http://192.168.1.8:9292/users/all") do |result|
       if result.success?
 				Motion::Blitz.dismiss
         callback.call result.object

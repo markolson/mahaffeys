@@ -16,7 +16,7 @@ class OnTapScreen < ProMotion::TableScreen
     @data =  Beer.ontap
     @beer_ids ||= Beer.ontap.inject([]) {|o,v| o += v[1]; o }.map(&:id)
 
-    @user_observer = App.notification_center.observe 'ChangedUser' do |notification|
+    @tap_user_observer = App.notification_center.observe 'ChangedUser' do |notification|
       update_table_data
       undrank = @beer_ids - App.delegate.active_user.beer_ids
       set_tab_bar_badge(undrank.count) if undrank.count > 0
