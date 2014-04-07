@@ -29,9 +29,7 @@ class Beer
 	end
 
 	def self.fetch_all(&callback)
-		Motion::Blitz.show('Grabbing Beers', :gradient)
-
-		AFMotion::JSON.get("http://192.168.1.8:9292/beers/all") do |result|
+		conn = AFMotion::JSON.get("http://192.168.1.8:9292/beers/all") do |result|
       if result.success?
 				Motion::Blitz.dismiss
         callback.call result.object
@@ -40,5 +38,9 @@ class Beer
         callback.call App::Persistence['beers']
       end
     end
+    
+    Motion::Blitz.show('Grabbing Beers', :gradient).sharedView.when_tapped do
+    	conn.cancel
+    end    
 	end
 end

@@ -24,7 +24,6 @@ class UserSearch < ProMotion::TableScreen
   end
 
   def on_click(user)
-    p "clicked on #{user}"
     close_screen(animated: true)
     App.notification_center.post 'ChangedUser', nil, {user: User[user[0]] }
   end

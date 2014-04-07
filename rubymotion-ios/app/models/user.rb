@@ -36,9 +36,9 @@ class User
 	end
 
 	def self.fetch_all(&callback)
-		Motion::Blitz.show('Grabbing Users', :gradient)
+		
 
-		AFMotion::JSON.get("http://192.168.1.8:9292/users/all") do |result|
+		conn = AFMotion::JSON.get("http://192.168.1.8:9292/users/all") do |result|
       if result.success?
 				Motion::Blitz.dismiss
         callback.call result.object
@@ -46,6 +46,9 @@ class User
       	Motion::Blitz.error
         callback.call App::Persistence['users']
       end
+    end
+    Motion::Blitz.show('Grabbing Users', :gradient).sharedView.when_tapped do
+    	conn.cancel
     end
 	end
 end

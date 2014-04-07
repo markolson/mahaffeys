@@ -19,21 +19,25 @@ class UserScreen < ProMotion::TableScreen
     @user_observer = App.notification_center.observe 'ChangedUser' do |notification|
       @active_user = nil
       update_table_data
-
-      @active_user =  notification.userInfo[:user]
-      self.title = @active_user.name
-      Notifier.progress(0.0)
-      @updater = Thread.new {
-        update_table_data
-        Notifier.dismiss
-        @updater = nil
-      }
+      set_user(notification.userInfo[:user])
     end     
   end
 
+  def set_user(user)
+    @active_user = user
+    self.title = @active_user.name
+    Notifier.progress(0.0)
+    @updater = Thread.new {
+      update_table_data
+      Notifier.dismiss
+      @updater = nil
+    }
+  end
+
   def view_did_appear(animated) 
-    if App::Persistence['user']
-      #set_user([App::Persistence['user']])
+    return if animated
+    if App::Persistence['user'] 
+      set_user(User[App::Persistence['user']])
     else
       open_user_search
     end
