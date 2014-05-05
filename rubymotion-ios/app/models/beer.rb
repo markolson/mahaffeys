@@ -29,7 +29,7 @@ class Beer
 	end
 
 	def self.fetch_all(&callback)
-		conn = AFMotion::JSON.get("http://192.168.1.8:9292/beers/all") do |result|
+		conn = AFMotion::JSON.get("http://mahaffeys.herokuapp.com/beers/all") do |result|
       if result.success?
 				Motion::Blitz.dismiss
         callback.call result.object

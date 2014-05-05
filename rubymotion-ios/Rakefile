@@ -24,7 +24,10 @@ Motion::Project::App.setup do |app|
   require 'bubble-wrap/all'
   require 'motion-testflight'
   require 'motion-blitz'
-  
+
+  app.device_family = [:iphone]
+  app.icons = Dir.glob("resources/icon*.png").map{|icon| icon.split("/").last}
+  app.prerendered_icon = false
 
   app.testflight.sdk = 'vendor/TestFlight'
 	app.testflight.api_token = 'd0188ac2d0ae9d8384abfe645d598872_MjIwMTA'

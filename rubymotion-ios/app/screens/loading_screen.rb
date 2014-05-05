@@ -13,7 +13,9 @@ class LoadingScreen < PM::Screen
   def load_users
   	@background_image.image = UIImage.imageNamed("background.users.jpg")
   	User.fetch_all do |data|
+      App::Persistence['users'] = data
   		User.set(data)
+      Motion::Blitz.dismiss
   		load_beers
   	end
   end

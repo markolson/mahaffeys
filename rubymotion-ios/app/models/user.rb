@@ -31,23 +31,20 @@ class User
 		data.each {|user|
 			@@all[user['id'].to_i] = User.new(user['id'].to_i, user['name'], user['beers'])
 		}
-		App::Persistence['users'] = data
 		@@all
 	end
 
 	def self.fetch_all(&callback)
-		
-
-		conn = AFMotion::JSON.get("http://192.168.1.8:9292/users/all") do |result|
+		conn = AFMotion::JSON.get("http://mahaffeys.herokuapp.com/users/all") do |result|
       if result.success?
-				Motion::Blitz.dismiss
         callback.call result.object
       else
       	Motion::Blitz.error
         callback.call App::Persistence['users']
       end
     end
-    Motion::Blitz.show('Grabbing Users', :gradient).sharedView.when_tapped do
+
+    Motion::Blitz.show('Grabbing Member List', :gradient).sharedView.when_tapped do
     	conn.cancel
     end
 	end

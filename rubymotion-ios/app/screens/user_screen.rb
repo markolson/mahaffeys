@@ -12,18 +12,19 @@ class UserScreen < ProMotion::TableScreen
 
 	def on_load
     set_nav_bar_button :left, title: "Find", action: 'open_user_search', system_icon: :search
-    set_nav_bar_button :right, title: "Compare", action: nil
+    #set_nav_bar_button :right, title: "Compare", action: nil
 
     tableView.tableFooterView = UIView.new.initWithFrame(CGRectZero) 
+    @active_user = nil
 
     @user_observer = App.notification_center.observe 'ChangedUser' do |notification|
-      @active_user = nil
       update_table_data
       set_user(notification.userInfo[:user])
     end     
   end
 
   def set_user(user)
+    return if self.active_user && (self.active_user.id == user.id)
     @active_user = user
     self.title = @active_user.name
     Notifier.progress(0.0)
@@ -34,10 +35,9 @@ class UserScreen < ProMotion::TableScreen
     }
   end
 
-  def view_did_appear(animated) 
-    return if animated
+  def view_did_appear(animated)
     if App::Persistence['user'] 
-      set_user(User[App::Persistence['user']])
+      App.notification_center.post 'ChangedUser', nil, {user: User[App::Persistence['user']] }
     else
       open_user_search
     end
