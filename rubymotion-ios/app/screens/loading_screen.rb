@@ -13,9 +13,7 @@ class LoadingScreen < PM::Screen
   def load_users
   	@background_image.image = UIImage.imageNamed("background.users.jpg")
   	User.fetch_all do |data|
-      App::Persistence['users'] = data
-  		User.set(data)
-      Motion::Blitz.dismiss
+      User.set(data)
   		load_beers
   	end
   end
@@ -23,7 +21,7 @@ class LoadingScreen < PM::Screen
   def load_beers
   	@background_image.image = UIImage.imageNamed("background.beers.jpg")
   	Beer.fetch_all do |data|
-  		Beer.set(data)
+  		Beer.set(data, false)
   		App.notification_center.post 'FetchComplete'
   	end
   end

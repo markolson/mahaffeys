@@ -16,7 +16,7 @@ class OnTapScreen < ProMotion::TableScreen
     @data =  Beer.ontap
     @beer_ids ||= Beer.ontap.inject([]) {|o,v| o += v[1]; o }.map(&:id)
 
-    @tap_user_observer = App.notification_center.observe 'ChangedUser' do |notification|
+    @tap_user_observer = App.notification_center.observe 'LoadedUser' do |notification|
       update_table_data
       undrank = @beer_ids - App.delegate.active_user.beer_ids
       set_tab_bar_badge(undrank.count) if undrank.count > 0
@@ -30,7 +30,7 @@ class OnTapScreen < ProMotion::TableScreen
         title: "#{name} (#{types.count})",
         cells: types.map { |t|
           drank = UIImage.imageNamed("undrank")
-          if App.delegate.active_user && App.delegate.active_user.drank?(t.id)
+          if App.delegate.active_user && App.delegate.active_user.drank?(t.id.to_s)
             drank = UIImage.imageNamed("drank")
           end
           { 
@@ -42,11 +42,6 @@ class OnTapScreen < ProMotion::TableScreen
       }
     }
   end
-
-  def swap_content_controller(screen_class)
-    App.delegate.slide_menu.controller(content: screen_class)
-  end
-
 end
 
 

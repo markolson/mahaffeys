@@ -11,13 +11,13 @@ class UserSearch < ProMotion::TableScreen
 
     [{
       title: nil,
-      cells: User.all.sort {|a,b| a[1].id <=> b[1].id}.map do |user|
+      cells: User.all.sort {|a,b| a[1]['id'] <=> b[1]['id']}.map do |user|
       {
-        title: user[1].name,
-        subtitle: "##{user[1].id}",
-        search_text: "#{user[1].id}",
+        title: user[1]['name'],
+        subtitle: "##{user[1]['id']}",
+        search_text: "#{user[1]['id']}",
         action: :on_click,
-        arguments: [user[1].id,  user[1].name]
+        arguments: [user[1]['id'],  user[1]['name']]
       }
       end
     }]

@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gem 'heroku'
 
+gem 'pry'
+
 gem 'icalendar'
 gem 'rake'
 gem "bubble-wrap", "~> 1.4.0"
@@ -9,7 +11,6 @@ gem 'motion-fontawesome'
 gem 'motion-cocoapods', '=1.4.2'
 gem 'motion-blitz'
 gem 'brewery_db'
-gem 'motion-testflight'
 
 gem 'cocoapods', '=0.32.1'
 gem "ProMotion", "~> 1.1.0" 

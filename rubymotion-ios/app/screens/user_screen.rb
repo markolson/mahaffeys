@@ -1,5 +1,5 @@
 class UserScreen < ProMotion::TableScreen
-
+  refreshable
   title "You, Eventually."
   tab_bar_item title: "You", icon: "111-user.png"
 
@@ -10,15 +10,20 @@ class UserScreen < ProMotion::TableScreen
   Notifier = Motion::Blitz
   attr_accessor :active_user, :award_bar, :updater
 
+  def on_refresh
+    @active_user.update {
+        @active_user = App.delegate.active_user = User[@active_user.id]
+        end_refreshing
+        update_table
+      }
+  end
+
 	def on_load
     set_nav_bar_button :left, title: "Find", action: 'open_user_search', system_icon: :search
-    #set_nav_bar_button :right, title: "Compare", action: nil
-
     tableView.tableFooterView = UIView.new.initWithFrame(CGRectZero) 
     @active_user = nil
 
     @user_observer = App.notification_center.observe 'ChangedUser' do |notification|
-      update_table_data
       set_user(notification.userInfo[:user])
     end     
   end
@@ -28,12 +33,25 @@ class UserScreen < ProMotion::TableScreen
     @active_user = user
     self.title = @active_user.name
     Notifier.progress(0.0)
-    @updater = Thread.new {
-      update_table_data
-      Notifier.dismiss
-      @updater = nil
-    }
+
+    if @active_user.beer_ids.count > 0
+      update_table
+    else
+      @active_user.update {
+        update_table
+      }
+    end
   end
+
+  def update_table
+    App.notification_center.post 'LoadedUser', nil, {user: User[App::Persistence['user']] }
+    set_award_bar(ClubStatus.convert(@active_user.beer_count))
+    @updater = Thread.new {
+        update_table_data
+        Notifier.dismiss
+        @updater = nil
+      }
+    end
 
   def view_did_appear(animated)
     if App::Persistence['user'] 
@@ -68,7 +86,6 @@ class UserScreen < ProMotion::TableScreen
     undrank = UIImage.imageNamed("undrank")
     progress = 0
     return {} if @active_user.nil?
-    set_award_bar(ClubStatus.convert(@active_user.beer_count))
     @active_user.beers.map {|name, types| 
       {
         title: "#{name} (#{types.count})",
@@ -85,11 +102,6 @@ class UserScreen < ProMotion::TableScreen
       }
     }
   end
-
-  def swap_content_controller(screen_class)
-    App.delegate.slide_menu.controller(content: screen_class)
-  end
-
 end
 
 
