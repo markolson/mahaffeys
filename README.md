@@ -6,11 +6,12 @@ Goals:
   * Show beers available for a member id
   * Show all beers available
   * Compare beers of one member to another
-  * facebook/twitter link?
   * News & Events
   * FB Checkin
-  * Hours
+  * Hours / Is-It-Open?
   * Twitter/FB Feed pane
+  * Untapped Search
+  * Untapped Ratings dialog
 
 
 URLs:
